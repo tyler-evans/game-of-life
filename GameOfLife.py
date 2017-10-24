@@ -135,8 +135,6 @@ def main():
     global RESOLUTION
     pygame.init()
 
-    print("\n".join(sys.argv))
-
     if len(sys.argv) > 1:
         if sys.argv[1] == "random":
             state = np.random.choice([0, 1], size=RESOLUTION)
@@ -147,9 +145,6 @@ def main():
         state = getBoard(np.zeros(RESOLUTION, dtype = uint8))
 
     animateLife(state)
-
-
-
 
     return
 
