@@ -44,16 +44,45 @@ def countNeighbours(state):
 
     return sum(directions)
 
+# Returns the mask of which cells have exactly 2 or 3 neighbours
+livingCellsMask = np.vectorize(lambda x : x==2 or x==3)
+
+# Returns the mask of which cells have exactly 3 neighbours
+deadCellsMask = np.vectorize(lambda x : x==3)
+
+# Generate the next state in the game according to the rules:
+# https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
+# 1. A living cell with 2 or 3 neighbours lives on
+# 2. A dead cell with exactly 3 neighbours spawns
+def nextState(state):
+
+    neighbourCounts = countNeighbours(state)
+
+    toStayAlive = state * livingCellsMask(neighbourCounts)
+
+    toSpawn = (1-state) * deadCellsMask(neighbourCounts)
+
+    state = toStayAlive + toSpawn
+
+    return state
+
 def main():
 
     # Set up a toy state and see the results of counting neighbours
-    state = np.zeros((5,5), uint8)
-    state[2,2] = 1
-    state[3,3] = 1
-    state[3,2] = 1
+    state = np.zeros((6,6), uint8)
+    state[2,4] = 1
+    state[3,5] = 1
+    state[3,4] = 1
+
+    state[0,1] = 1
+    state[1,1] = 1
+    state[2,1] = 1
 
     print(state)
     print(countNeighbours(state))
+
+    # Generate the next state
+    print(nextState(state))
 
 
     return
