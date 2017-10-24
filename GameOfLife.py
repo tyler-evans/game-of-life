@@ -107,6 +107,30 @@ def animateLife(state):
         pygame.time.delay(timeDelay)
 
 
+# Display a blank board.  User clicks fill the position with a live cell.
+# Return the board after a key is pressed.
+def getBoard(state):
+
+    graphics(state)
+
+    gettingInput = True
+    while gettingInput:
+        for e in pygame.event.get():
+            if e.type == QUIT:
+                pygame.exit()
+                raise SystemExit()
+            elif e.type == pygame.KEYDOWN:
+                gettingInput = False
+            elif e.type == pygame.MOUSEBUTTONUP:
+                pos = pygame.mouse.get_pos()
+                x = pos[0]//SCALE
+                y = pos[1]//SCALE
+                state[x,y] = 1
+                graphics(np.transpose(state))
+
+    return np.transpose(state)
+
+
 def main():
     global RESOLUTION
     pygame.init()
@@ -114,10 +138,13 @@ def main():
     print("\n".join(sys.argv))
 
     if len(sys.argv) > 1:
-        state = np.loadtxt(sys.argv[1], dtype = uint8)
-        RESOLUTION = state.shape[:2]
+        if sys.argv[1] == "random":
+            state = np.random.choice([0, 1], size=RESOLUTION)
+        else:
+            state = np.loadtxt(sys.argv[1], dtype = uint8)
+            RESOLUTION = state.shape[:2]
     else:
-        state = np.random.choice([0, 1], size=RESOLUTION)
+        state = getBoard(np.zeros(RESOLUTION, dtype = uint8))
 
     animateLife(state)
 
