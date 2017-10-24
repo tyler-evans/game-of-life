@@ -1,5 +1,11 @@
 import numpy as np
 from numpy import uint8
+import pygame
+from pygame import surfarray
+from pygame.locals import *
+
+RESOLUTION = (50,50)
+SCALE = 10
 
 # Shift the state matrix north, filling in the south row with zeros
 def north(state):
@@ -66,7 +72,18 @@ def nextState(state):
 
     return state
 
+# Draw the given state, scaled by SCALE
+def graphics(state):
+    state = np.transpose(state)
+    largeState = np.kron(state*255, np.ones((SCALE,SCALE)))
+    screen = pygame.display.set_mode(largeState.shape[:2], 0, 8)
+    surfarray.blit_array(screen, largeState)
+    pygame.display.update()
+    return
+
 def main():
+
+    pygame.init()
 
     # Set up a toy state and see the results of counting neighbours
     state = np.zeros((6,6), uint8)
@@ -83,6 +100,17 @@ def main():
 
     # Generate the next state
     print(nextState(state))
+
+    # Draw the initial state
+    while(1):
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                raise SystemExit()
+
+        graphics(state)
+
+
 
 
     return
