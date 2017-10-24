@@ -3,6 +3,7 @@ from numpy import uint8
 import pygame
 from pygame import surfarray
 from pygame.locals import *
+import sys
 
 RESOLUTION = (50,50)
 SCALE = 10
@@ -94,6 +95,11 @@ def animateLife(state):
             if e.type == QUIT:
                 pygame.quit()
                 raise SystemExit()
+            elif e.type == pygame.KEYDOWN:
+                if e.key == ord('f'): # faster
+                    timeDelay -= 10
+                elif e.key == ord('s'): # slower
+                    timeDelay += 10
 
 
         state = nextState(state)
@@ -102,21 +108,16 @@ def animateLife(state):
 
 
 def main():
-
+    global RESOLUTION
     pygame.init()
 
-    # Set up a toy state and see the results of counting neighbours
-    state = np.zeros((6,6), uint8)
-    state[2,4] = 1
-    state[3,5] = 1
-    state[3,4] = 1
+    print("\n".join(sys.argv))
 
-    state[0,1] = 1
-    state[1,1] = 1
-    state[2,1] = 1
-
-    print(state)
-    print(countNeighbours(state))
+    if len(sys.argv) > 1:
+        state = np.loadtxt(sys.argv[1], dtype = uint8)
+        RESOLUTION = state.shape[:2]
+    else:
+        state = np.random.choice([0, 1], size=RESOLUTION)
 
     animateLife(state)
 
