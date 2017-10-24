@@ -6,6 +6,7 @@ from pygame.locals import *
 
 RESOLUTION = (50,50)
 SCALE = 10
+DELAY = 300
 
 # Shift the state matrix north, filling in the south row with zeros
 def north(state):
@@ -81,6 +82,25 @@ def graphics(state):
     pygame.display.update()
     return
 
+# Animate all subsequent states from given state with delay
+def animateLife(state):
+
+    timeDelay = DELAY
+
+    graphics(state)
+
+    while 1:
+        for e in pygame.event.get():
+            if e.type == QUIT:
+                pygame.quit()
+                raise SystemExit()
+
+
+        state = nextState(state)
+        graphics(state)
+        pygame.time.delay(timeDelay)
+
+
 def main():
 
     pygame.init()
@@ -98,17 +118,7 @@ def main():
     print(state)
     print(countNeighbours(state))
 
-    # Generate the next state
-    print(nextState(state))
-
-    # Draw the initial state
-    while(1):
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                pygame.quit()
-                raise SystemExit()
-
-        graphics(state)
+    animateLife(state)
 
 
 
