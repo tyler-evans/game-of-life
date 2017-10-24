@@ -25,22 +25,36 @@ def east(state):
     state[:,0] = 0
     return state
 
+# Return a matrix where each entry corresponds to the number of neighbours for
+# corresponding entry in `state`
+# Shift matrix and sum idea from: 
+# https://www.r-bloggers.com/fast-conways-game-of-life-in-r/
+def countNeighbours(state):
+    N = north(state)
+    S = south(state)
+    W = west(state)
+    E = east(state)
 
+    NE = north(E)
+    SE = south(E)
+    NW = north(W)
+    SW = south(W)
+
+    directions = [N, S, E, W, NE, SE, NW, SW]
+
+    return sum(directions)
 
 def main():
 
-    # Set up a toy state and see the results of rolling it
-    state = np.ones((5,5), uint8)
-    #state[2,2] = 1
-    #state[3,3] = 1
-    #state[3,2] = 1
+    # Set up a toy state and see the results of counting neighbours
+    state = np.zeros((5,5), uint8)
+    state[2,2] = 1
+    state[3,3] = 1
+    state[3,2] = 1
 
     print(state)
-    print(north(state))
-    print(south(state))
-    print(west(state))
-    print(east(state))
-    
+    print(countNeighbours(state))
+
 
     return
 
